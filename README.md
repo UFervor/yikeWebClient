@@ -1,4 +1,8 @@
 # yikeWebClientPython
+依赖</br>
+requests
+Python3
+
 首先</br>
 from yike import *</br>
 </br>
