@@ -1,8 +1,9 @@
 # yikeWebClientPython
-依赖</br>
-requests
-Python3
-
+# 开源的百度一刻相册客户端 仅供学习使用
+依赖：</br>
+requests</br>
+Python3</br>
+</br>
 首先</br>
 from yike import *</br>
 </br>
