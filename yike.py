@@ -68,7 +68,6 @@ class yikeENV():
             + '&fsid_list='
         while True:
             if len(fsid_list) > 500:
-                print(len(fsid_list))
                 tmp = fsid_list[:500:]
                 fsid_list = fsid_list[500::]
                 while (True):
@@ -80,7 +79,6 @@ class yikeENV():
                         time.sleep(1)
                 result.append(r)
             else:
-                print(len(fsid_list))
                 tmp = fsid_list
                 while (True):
                     r = requests.get(
