@@ -43,3 +43,6 @@ bdstoken=input("bdtoken:")</br>
 cookies=input("cookies:")</br>
 yi = yikeENV(cookies, bdstoken)</br>
 print(yi.delete(yi.getvideos())) #删除全部视频</br>
+</br>
+注意事项：</br>
+一刻相册的task需要一段时间执行，如果界面无反应请耐心等待，返回的errno为0就说明一定会生效了。
