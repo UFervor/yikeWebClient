@@ -1,0 +1,151 @@
+一刻相册网页版API分析
+列出：
+    列出全部：
+    https://photo.baidu.com/youai/file/v1/list?
+    列出回收站：
+    https://photo.baidu.com/youai/file/v1/listrecycle?
+    查询参数：
+    clienttype=数字 （客户端类型，70代表网页）
+    bdstoken=字符串 （获取的百度Token）
+    cursor=字符串 （Base64编码的JSON）
+        {"start":数字 0（代表从第零张图片开始）,"limit":数字 100（代表一次返回的图片数量）}
+
+    应答：（JSON）
+    cursor: 字符串 （Base64编码的JSON） 详见前文
+    errno: 数字 （错误代码，0代表无错误）
+    has_more: 数字 （是否有还有查询范围之后的媒体，1代表有，0代表无）
+    list: 列表，包含多个JSON
+        category: 数字
+        collect_status: 数字
+        ctime: 数字
+        ext_status: 数字
+        extra_info（JSON）: 
+            date_time: 字符串 （时间 YYYY:MM:DD hh:mm:ss）
+            duration: 数字
+            duration_ms: 数字
+            height: 数字 （图片长度）
+            width: 数字 （图片宽）
+        face_info: JSON
+        flag: 数字
+        fsid: 数字 （图片ID）
+        location: JSON
+        md5: 字符串
+        mtime: 数字
+        path: 字符串（文件路径）
+        poi: 列表
+        server_md5: 字符串 
+        shoot_time: 数字
+        size: 数字 （大小）
+        status: 数字
+        tags: 列表，包含一个JSON
+            tag_type: 数字
+            tag_id: 数字 （详见前文）
+        task_status: 数字
+        thumburl: 列表，包含多个字符串
+            字符串一（按照最大300x300像素缩放的图片URL）
+            字符串二（按照最大1600x1600像素缩放的图片URL）
+    request_id: 数字 （请求ID）
+查询：
+    查询：
+    https://photo.baidu.com/youai/iclass/index/v1/search?
+    查询参数：
+    clienttype=数字 （客户端类型，70代表网页）
+    bdstoken=字符串 （获取的百度Token）
+    tag_id=数字
+        22：截图
+        1103：动图
+        1102：视频
+    need_thumbnail=数字 （代表是否返回缩略图URL，1代表是）
+    need_filter_hidden=数字 （代表是否过滤隐藏媒体，0代表否）
+    cursor=字符串（Base64编码的JSON）
+        {"start":数字 0（代表从第零张图片开始）,"limit":数字 100（代表一次返回的图片数量）}
+
+    应答：（JSON）
+    cursor: 字符串（Base64编码的JSON） 详见前文
+    errno: 数字 （错误代码，0代表无错误）
+    has_more: 数字 （是否有还有查询范围之后的媒体，1代表有，0代表无）
+    list: 列表，包含多个JSON
+        category: 数字
+        collect_status: 数字
+        ctime: 数字
+        ext_status: 数字
+        extra_info（JSON）: 
+            date_time: 字符串 （时间 YYYY:MM:DD hh:mm:ss）
+            duration: 数字
+            duration_ms: 数字
+            height: 数字 （图片长度）
+            width: 数字 （图片宽）
+        face_info: JSON
+        flag: 数字
+        fsid: 数字 （图片ID）
+        location: JSON
+        md5: 字符串
+        mtime: 数字
+        path: 字符串（文件路径）
+        poi: 列表
+        server_md5: 字符串 
+        shoot_time: 数字
+        size: 数字 （大小）
+        status: 数字
+        tags: 列表，包含一个JSON
+            tag_type: 数字
+            tag_id: 数字 （详见前文）
+        task_status: 数字
+        thumburl: 列表，包含多个字符串
+            字符串一（按照最大300x300像素缩放的图片URL）
+            字符串二（按照最大1600x1600像素缩放的图片URL）
+    request_id: 数字 （请求ID）
+    total_count: 数字 （媒体总数）
+下载：
+    获取下载URL：
+    https://photo.baidu.com/youai/file/v2/download?
+    查询参数：
+    clienttype=数字 （客户端类型，70代表网页）
+    bdstoken=字符串 （获取的百度Token）
+    fsid=数字 （代表图片ID）
+
+    应答：（JSON）
+    dlink: 字符串 （图片URL）
+    errno: 数字 （错误代码，0代表无错误）
+    request_id: 数字 （请求ID）
+
+EXIF：
+    请求EXIF：
+    https://photo.baidu.com/youai/file/v1/exif?
+    查询参数：
+    clienttype=数字 70（代表网页）
+    bdstoken=字符串（获取的百度Token）
+    fsid=数字（代表图片ID）
+
+    应答：（JSON）
+    errno: 数字 （错误代码，0代表无错误）
+    exposure_time: 字符串
+    f_number: 数字
+    focal_length: 数字
+    iso_speed_ratings: 数字
+    lens_model: 字符串
+    make: 字符串
+    model: 字符串
+    request_id: 数字 （请求ID）
+删除：
+    移动图片到回收站：
+    https://photo.baidu.com/youai/file/v1/delete?
+    从回收站中删除：
+    https://photo.baidu.com/youai/file/v1/delrecycle?
+    clienttype=数字 70（代表网页）
+    bdstoken=字符串（获取的百度Token）
+    fsid_list=（列表，包括多个数字）
+        数字（代表图片ID）
+    应答：（JSON）
+    errno: 数字 （错误代码，0代表无错误）
+    request_id: 数字 （请求ID）
+恢复：
+    恢复图片：
+    https://photo.baidu.com/youai/file/v1/restore?
+    clienttype=数字 70（代表网页）
+    bdstoken=字符串（获取的百度Token）
+    fsid_list=（列表，包括多个数字）
+        数字（代表图片ID）
+    应答：（JSON）
+    errno: 数字 （错误代码，0代表无错误）
+    request_id: 数字 （请求ID）

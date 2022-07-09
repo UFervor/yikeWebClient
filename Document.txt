@@ -1,0 +1,40 @@
+首先
+from yike import *
+
+先使用cookie(字符串)与bdstoken(字符串)（F12去找）实例化
+yi = yikeENV(cookies, bdstoken)
+
+yikeENV有几个方法：
+以下方法返回一个包含yikePhoto类的列表
+getvideos() #获取全部视频
+getgifs() #获取全部动图
+getscreenshots() #获取全部截图
+getall() #获取全部
+getrecycled() #获取回收站全部
+clearrecycle() #清空回收站
+特别地，以下三个方法接受一个参数
+其类型为包含了yikePhoto类的列表
+三个方法都返回包含所有应答JSON(字典)的列表
+delete(list) #移入回收站
+restore(list) #从回收站恢复
+delrecycle(list) #从回收站删除
+
+yikePhoto有以下几个方法：
+delrecycle() #从回收站删除自身
+restore() #从回收站恢复自身
+delete() #将自身移入回收站
+exif() #获取自身EXIF
+以上方法都返回一个JSON(字典)
+特别地，该方法返回一个URL字符串
+getdl() #获取自身下载链接
+yikePhoto有一个可能有用属性
+yikePhoto.time
+该属性为一个字符串，记录了其在一刻中显示的时间（在主页时间轴上）
+格式为YYYY:MM:DD HH:MM:SS
+
+使用例：
+from yike import *
+bdstoken=input("bdtoken:")
+cookies=input("cookies:")
+yi = yikeENV(cookies, bdstoken)
+print(yi.delete(yi.getvideos())) #删除全部视频
