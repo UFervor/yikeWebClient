@@ -1,4 +1,5 @@
 ## 这是一个开源的百度一刻相册客户端，通过逆向网页版API实现。  
+### 这是文档，更多请见[Wiki](https://github.com/hexin-lin-1024/yikeWebClientPython/wiki)。  
 
 |依赖|  
 |---
