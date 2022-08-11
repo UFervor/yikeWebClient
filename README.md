@@ -12,7 +12,7 @@
 cookie字符串可以在浏览器开发人员工具中寻得，bdstoken同理，设置筛选条件为XHR寻找。  
   
 yikeENV有几个实现其功能的成员方法：  
-以下方法都不接受参数，且返回一个包含yikePhoto类的列表  
+以下方法都不接受参数，且返回一个包含yikePhoto类的列表。  
 
 |方法名称|方法作用|
 |---|---
@@ -61,5 +61,5 @@ yi = yikeENV(cookies, bdstoken)
 print(yi.delete(yi.getvideos())) #删除全部视频  
 ```
   
-### 注意事项：  
+### 请注意：  
 一刻相册的task需要一段时间执行，如果界面无反应请耐心等待，返回的errno为0就说明一定会生效了。
