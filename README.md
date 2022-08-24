@@ -12,6 +12,7 @@
 并实例化`yi = yikeENV(cookies, bdstoken)`。  
 cookie字符串可以在浏览器开发人员工具中寻得，bdstoken同理，设置筛选条件为XHR寻找。  
   
+### yikeENV类：  
 yikeENV有几个实现其功能的成员方法：  
 以下方法都不接受参数，且返回一个包含yikePhoto类的列表。  
 
@@ -37,6 +38,8 @@ yikeENV有几个实现其功能的成员方法：
 |---|---  
 |dlall() 不推荐使用该方法，因为速度太慢，在之后版本中将改写为多线程下载。 （此方法通过调用yikePhoto.dl()实现）|将给出的媒体全部下载到工作目录中|  
   
+  
+### yikePhoto类：  
 yikePhoto是实现功能的基本单位，含有以下几个成员方法：  
 以下方法都不接受参数，且返回一个JSON(字典)。  
   
@@ -63,7 +66,7 @@ yikePhoto有一个可能有用的属性：  `yikePhoto.time`。
 该属性为一个字符串，记录了其在一刻中显示的时间（在主页时间轴上）且格式为YYYY:MM:DD HH:MM:SS。  
 由于Png，Webp等图片在传输过程中丢失了创建时间信息，而通常情况此类文件没有被写入元信息，故该属性可作为补充。  
 
-使用例：
+### 使用例：
 
 ```Python
 from yike import *  
