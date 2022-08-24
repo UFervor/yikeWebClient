@@ -4,6 +4,7 @@
 |依赖|  
 |---
 |requests  
+|pywin32  
 |Python3|
   
 ### 使用教程：
