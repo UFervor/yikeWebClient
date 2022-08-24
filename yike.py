@@ -1,6 +1,13 @@
 import base64
 import requests
 import time
+import os
+from urllib.parse import unquote
+import traceback
+from win32file import CreateFile, SetFileTime, GetFileTime, CloseHandle
+from win32file import GENERIC_READ, GENERIC_WRITE, OPEN_EXISTING
+from pywintypes import Time
+import time
 
 
 class yikeENV():
@@ -119,6 +126,10 @@ class yikeENV():
             + 'clienttype=70' \
             + '&bdstoken=' + self.bdstoken
         return requests.get(url, cookies=self.cookies, headers=self.ua).json()
+    
+    def dlall(self, li, workdir):
+        for i in li:
+            i.dl(workdir)
 
 
 class yikePhoto:
@@ -137,6 +148,15 @@ class yikePhoto:
             + '&fsid_list=[' + self.fsid + ']'
         return requests.get(url, cookies=self.cookies, headers=self.ua).json()
 
+    def __modifyFileTime__(self, filePath, cTime):
+        format = "%Y:%m:%d %H:%M:%S"
+        Time_t = time.localtime(time.mktime(time.strptime(cTime, '%Y:%m:%d %H:%M:%S')))
+        fh = CreateFile(filePath, GENERIC_READ | GENERIC_WRITE, 0, None, OPEN_EXISTING, 0, 0)
+        createTimes, accessTimes, modifyTimes = GetFileTime(fh)
+        T = Time(time.mktime(Time_t))
+        SetFileTime(fh, T, T, T)
+        CloseHandle(fh)
+
     def delrecycle(self):
         return self.__fo__('delrecycle')
 
@@ -147,11 +167,15 @@ class yikePhoto:
         return self.__fo__('delete')
 
     def getdl(self):
-        url = 'https://photo.baidu.com/youai/file/v2/download?' \
-            + 'clienttype=70' \
-            + '&bdstoken=' + self.bdstoken \
-            + '&fsid=' + self.fsid
-        return requests.get(url, cookies=self.cookies, headers=self.ua).json()['dlink']
+        try:
+            url = 'https://photo.baidu.com/youai/file/v2/download?' \
+                + 'clienttype=70' \
+                + '&bdstoken=' + self.bdstoken \
+                + '&fsid=' + self.fsid
+            return requests.get(url, cookies=self.cookies, headers=self.ua).json()['dlink']
+        except Exception as e:
+            print('[Error] Failed to get download link of photo with fsid ' + self.fsid)
+            print(traceback.format_exc())
 
     def exif(self):
         url = 'https://photo.baidu.com/youai/file/v1/exif?' \
@@ -159,3 +183,30 @@ class yikePhoto:
             + '&bdstoken=' + self.bdstoken \
             + '&fsid=' + self.fsid
         return requests.get(url, cookies=self.cookies, headers=self.ua).json()
+
+    def dl(self, workdir):
+        try:
+            url = self.getdl()
+            r = requests.get(url, stream=True, headers=self.ua)
+            filename = ''
+            if 'Content-Disposition' in r.headers and r.headers['Content-Disposition']:
+                disposition_split = r.headers['Content-Disposition'].split(';')
+                if len(disposition_split) > 1:
+                    if disposition_split[1].strip().lower().startswith('filename='):
+                        file_name = disposition_split[1].split('=')
+                        if len(file_name) > 1:
+                            filename = unquote(file_name[1])
+            if not filename and os.path.basename(url):
+                filename = os.path.basename(url).split("?")[0]
+            if not filename:
+                raise ValueError()
+            filePath = workdir + filename
+            file = open(filePath, 'wb')
+            for i in r.iter_content(chunk_size=1024):
+                if i:
+                    file.write(i)
+            file.close()
+            self.__modifyFileTime__(filePath, self.time)
+        except Exception as e:
+            print('[Error] Error downloading photo with fsid ' + self.fsid)
+            print(traceback.format_exc())
