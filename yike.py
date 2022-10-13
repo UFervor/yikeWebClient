@@ -9,6 +9,7 @@ from win32file import GENERIC_READ, GENERIC_WRITE, OPEN_EXISTING
 from pywintypes import Time
 from email.message import Message
 import time
+import hashlib
 
 req = requests.Session()
 class yikeENV():
@@ -59,7 +60,7 @@ class yikeENV():
         while True:
             result = req.get(url + self.__cursor__(i, self.limit),
                             cookies=self.cookies, headers=self.ua).json()
-            if 'list' not in result:
+            if 'list' not in result: # r['errno'] == 2, no more result
                 break
             tmp = result['list']
             if tmp == []:
@@ -157,12 +158,17 @@ class yikePhoto:
         return req.get(url, cookies=self.cookies, headers=self.ua).json()
 
     def __modifyFileTime__(self, filePath, cTime):
-        format = "%Y:%m:%d %H:%M:%S"
+        #format = "%Y:%m:%d %H:%M:%S"
         Time_t = time.localtime(time.mktime(time.strptime(cTime, '%Y:%m:%d %H:%M:%S')))
         fh = CreateFile(filePath, GENERIC_READ | GENERIC_WRITE, 0, None, OPEN_EXISTING, 0, 0)
-        createTimes, accessTimes, modifyTimes = GetFileTime(fh)
+        #createTimes, accessTimes, modifyTimes = GetFileTime(fh)
         T = Time(time.mktime(Time_t))
-        SetFileTime(fh, T, T, T)
+        #SetFileTime(fh, T, T, T)
+        try:
+            SetFileTime(fh, time.time(), T, time.time())
+        except Exception as e:
+            print('[Error] __modifyFileTime__ for ' + filePath + ' to ' + cTime)
+        finally:
         CloseHandle(fh)
 
     def delrecycle(self):
@@ -192,6 +198,13 @@ class yikePhoto:
             + '&fsid=' + self.fsid
         return req.get(url, cookies=self.cookies, headers=self.ua).json()
 
+    def __md5__(self, fname):
+        hash_md5 = hashlib.md5()
+        with open(fname,"rb") as f:
+            for chunk in iter(lambda :f.read(4096),b""):
+                hash_md5.update(chunk)
+        return hash_md5.hexdigest()
+
     def dl(self, workdir):
         try:
             url = self.getdl()
@@ -210,8 +223,19 @@ class yikePhoto:
                 raise ValueError()
             filename = filename.strip('"')
             filePath = workdir + filename
+            if(os.path.isfile(filePath) and 
+                'Content-Length' in r.headers and r.headers['Content-Length'] and
+                'Content-MD5' in r.headers and r.headers['Content-MD5']): # sometime KeyError: 'content-length'
+                if(os.path.getsize(filePath) != int(r.headers['Content-Length']) or 
+                    self.__md5__(filePath) != r.headers['Content-MD5']):
+                    filePath_ = os.path.splitext(filePath)
+                    oldFileNewPath = filePath_[0] + 'old.' + str(int(time.time())) + filePath_[1]
+                    os.rename(filePath, oldFileNewPath)
+                else:
+                    return
+
             file = open(filePath, 'wb')
-            for i in r.iter_content(chunk_size=1024):
+            for i in r.iter_content(chunk_size=4096):
                 if i:
                     file.write(i)
             file.close()
