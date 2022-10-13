@@ -49,15 +49,19 @@ class yikeENV():
             result.append(yikePhoto(i, self.cookies, self.bdstoken))
         return result
 
-    def __list__(self, method):
+    def __list__(self, method, extra = ""):
         url = 'https://photo.baidu.com/youai/file/v1/' + method + '?' \
             + 'clienttype=70' \
-            + '&bdstoken=' + self.bdstoken
+            + '&bdstoken=' + self.bdstoken \
+            + extra
         l = []
         i = 0
         while True:
-            tmp = req.get(url + self.__cursor__(i, self.limit),
-                               cookies=self.cookies, headers=self.ua).json()['list']
+            result = req.get(url + self.__cursor__(i, self.limit),
+                            cookies=self.cookies, headers=self.ua).json()
+            if 'list' not in result:
+                break
+            tmp = result['list']
             if tmp == []:
                 break
             l += tmp
@@ -112,6 +116,9 @@ class yikeENV():
 
     def getrecycled(self):
         return self.__list__('listrecycle')
+
+    def listrecent(self):
+        return self.__list__('listrecent', '&need_thumbnail=1&sort_field=ctime')
 
     def delete(self, list):
         return self.__fo__('delete', list)
