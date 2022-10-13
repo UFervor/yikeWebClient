@@ -7,6 +7,7 @@ import traceback
 from win32file import CreateFile, SetFileTime, GetFileTime, CloseHandle
 from win32file import GENERIC_READ, GENERIC_WRITE, OPEN_EXISTING
 from pywintypes import Time
+from email.message import Message
 import time
 
 req = requests.Session()
@@ -190,12 +191,12 @@ class yikePhoto:
             r = req.get(url, stream=True, headers=self.ua)
             filename = ''
             if 'Content-Disposition' in r.headers and r.headers['Content-Disposition']:
-                disposition_split = r.headers['Content-Disposition'].split(';')
-                if len(disposition_split) > 1:
-                    if disposition_split[1].strip().lower().startswith('filename='):
-                        file_name = disposition_split[1].split('=')
-                        if len(file_name) > 1:
-                            filename = unquote(file_name[1])
+                m = Message()
+                m['Content-Disposition'] = r.headers['Content-Disposition']
+                file_name = m.get_param('filename', None, 'Content-Disposition')
+                if file_name:
+                    f = file_name.encode('ISO-8859-1').decode('utf8')
+                    filename = unquote(f)
             if not filename and os.path.basename(url):
                 filename = os.path.basename(url).split("?")[0]
             if not filename:
