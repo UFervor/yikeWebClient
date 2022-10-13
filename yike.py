@@ -12,6 +12,12 @@ import time
 import hashlib
 
 req = requests.Session()
+
+def printProgress(message):
+    global printMaxChar
+    printMaxChar = max(printMaxChar, len(message))
+    print(('\r' + message).ljust(printMaxChar + 4), end='')
+
 class yikeENV():
     def __init__(self, cookies, bdstoken, limit=100):
         self.cookies = dict([l.split("=", 1) for l in cookies.split("; ")])
@@ -145,6 +151,9 @@ class yikePhoto:
     def __init__(self, js, cookies, bdstoken):
         self.fsid = str(js['fsid'])
         self.time = js['extra_info']['date_time'].replace('-',':')
+        self.ctime = js['ctime']
+        self.mtime = js['mtime']
+        #self.shoot_time = js['shoot_time']
         self.cookies = cookies
         self.bdstoken = str(bdstoken)
         self.ua = {
@@ -157,17 +166,19 @@ class yikePhoto:
             + '&fsid_list=[' + self.fsid + ']'
         return req.get(url, cookies=self.cookies, headers=self.ua).json()
 
-    def __modifyFileTime__(self, filePath, cTime):
-        #format = "%Y:%m:%d %H:%M:%S"
-        Time_t = time.localtime(time.mktime(time.strptime(cTime, '%Y:%m:%d %H:%M:%S')))
+    def __modifyFileTime__(self, filePath):
+        ctime = time.localtime(self.ctime)
+        mtime = time.localtime(self.mtime)
         fh = CreateFile(filePath, GENERIC_READ | GENERIC_WRITE, 0, None, OPEN_EXISTING, 0, 0)
         #createTimes, accessTimes, modifyTimes = GetFileTime(fh)
-        T = Time(time.mktime(Time_t))
+        #T = Time(time.mktime(Time_t))
         #SetFileTime(fh, T, T, T)
         try:
-            SetFileTime(fh, time.time(), T, time.time())
+            SetFileTime(fh, Time(ctime), Time(mtime), Time(time.time())) # must be a pywintypes time object
         except Exception as e:
-            print('[Error] __modifyFileTime__ for ' + filePath + ' to ' + cTime)
+            print('[Error] __modifyFileTime__ for ' + filePath + ' to ' + time.strptime(mtime, '%Y:%m:%d %H:%M:%S'))
+            #print(traceback.format_exc())
+            raise
         finally:
         CloseHandle(fh)
 
@@ -232,6 +243,8 @@ class yikePhoto:
                     oldFileNewPath = filePath_[0] + 'old.' + str(int(time.time())) + filePath_[1]
                     os.rename(filePath, oldFileNewPath)
                 else:
+                    printProgress(os.path.basename(filePath) + ' already exists.')
+                    # self.__modifyFileTime__(filePath)
                     return
 
             file = open(filePath, 'wb')
@@ -239,7 +252,9 @@ class yikePhoto:
                 if i:
                     file.write(i)
             file.close()
-            self.__modifyFileTime__(filePath, self.time)
+            self.__modifyFileTime__(filePath)
+            printProgress(os.path.basename(filePath) + ' done.')
         except Exception as e:
-            print('[Error] Error downloading photo with fsid ' + self.fsid)
+            print('[Error] Error downloading photo with fsid ', self.fsid)
+            print('The file path: ', filePath)
             print(traceback.format_exc())
