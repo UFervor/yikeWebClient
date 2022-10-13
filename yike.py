@@ -200,6 +200,7 @@ class yikePhoto:
                 filename = os.path.basename(url).split("?")[0]
             if not filename:
                 raise ValueError()
+            filename = filename.strip('"')
             filePath = workdir + filename
             file = open(filePath, 'wb')
             for i in r.iter_content(chunk_size=1024):
