@@ -9,7 +9,7 @@ from win32file import GENERIC_READ, GENERIC_WRITE, OPEN_EXISTING
 from pywintypes import Time
 import time
 
-
+req = requests.Session()
 class yikeENV():
     def __init__(self, cookies, bdstoken, limit=100):
         self.cookies = dict([l.split("=", 1) for l in cookies.split("; ")])
@@ -37,7 +37,7 @@ class yikeENV():
         l = []
         i = 0
         while True:
-            tmp = requests.get(url + self.__cursor__(i, self.limit),
+            tmp = req.get(url + self.__cursor__(i, self.limit),
                                cookies=self.cookies, headers=self.ua).json()['list']
             if tmp == []:
                 break
@@ -55,7 +55,7 @@ class yikeENV():
         l = []
         i = 0
         while True:
-            tmp = requests.get(url + self.__cursor__(i, self.limit),
+            tmp = req.get(url + self.__cursor__(i, self.limit),
                                cookies=self.cookies, headers=self.ua).json()['list']
             if tmp == []:
                 break
@@ -78,7 +78,7 @@ class yikeENV():
                 tmp = fsid_list[:500:]
                 fsid_list = fsid_list[500::]
                 while (True):
-                    r = requests.get(
+                    r = req.get(
                     url + str(tmp).replace(' ', '').replace('\'', ''), cookies=self.cookies, headers=self.ua).json()
                     if r['errno'] == 0:
                         break
@@ -88,7 +88,7 @@ class yikeENV():
             else:
                 tmp = fsid_list
                 while (True):
-                    r = requests.get(
+                    r = req.get(
                     url + str(tmp).replace(' ', '').replace('\'', ''), cookies=self.cookies, headers=self.ua).json()
                     if r['errno'] == 0:
                         break
@@ -125,7 +125,7 @@ class yikeENV():
         url = 'https://photo.baidu.com/youai/file/v1/clearrecycle?' \
             + 'clienttype=70' \
             + '&bdstoken=' + self.bdstoken
-        return requests.get(url, cookies=self.cookies, headers=self.ua).json()
+        return req.get(url, cookies=self.cookies, headers=self.ua).json()
     
     def dlall(self, li, workdir):
         for i in li:
@@ -146,7 +146,7 @@ class yikePhoto:
             + 'clienttype=70' \
             + '&bdstoken=' + self.bdstoken \
             + '&fsid_list=[' + self.fsid + ']'
-        return requests.get(url, cookies=self.cookies, headers=self.ua).json()
+        return req.get(url, cookies=self.cookies, headers=self.ua).json()
 
     def __modifyFileTime__(self, filePath, cTime):
         format = "%Y:%m:%d %H:%M:%S"
@@ -172,7 +172,7 @@ class yikePhoto:
                 + 'clienttype=70' \
                 + '&bdstoken=' + self.bdstoken \
                 + '&fsid=' + self.fsid
-            return requests.get(url, cookies=self.cookies, headers=self.ua).json()['dlink']
+            return req.get(url, cookies=self.cookies, headers=self.ua).json()['dlink']
         except Exception as e:
             print('[Error] Failed to get download link of photo with fsid ' + self.fsid)
             print(traceback.format_exc())
@@ -182,12 +182,12 @@ class yikePhoto:
             + 'clienttype=70' \
             + '&bdstoken=' + self.bdstoken \
             + '&fsid=' + self.fsid
-        return requests.get(url, cookies=self.cookies, headers=self.ua).json()
+        return req.get(url, cookies=self.cookies, headers=self.ua).json()
 
     def dl(self, workdir):
         try:
             url = self.getdl()
-            r = requests.get(url, stream=True, headers=self.ua)
+            r = req.get(url, stream=True, headers=self.ua)
             filename = ''
             if 'Content-Disposition' in r.headers and r.headers['Content-Disposition']:
                 disposition_split = r.headers['Content-Disposition'].split(';')
