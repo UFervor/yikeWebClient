@@ -14,8 +14,15 @@
 `pip3 install requests pywin32`
   
 ### 使用教程：
-引入：`from yike import *`，  
-并实例化 `yi = yikeENV(cookies, bdstoken)`。  
+引入
+```Python
+from yike import *
+```  
+并实例化 
+```Python
+yi = yikeENV(cookies, bdstoken)
+```  
+
 cookie字符串可以在浏览器开发人员工具中寻得，bdstoken同理，设置筛选条件为XHR寻找。  
 未来展望：实现登录。  
   
