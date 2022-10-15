@@ -1,73 +1,64 @@
 ## 这是一个开源的百度一刻相册客户端，仅供学习使用，通过逆向网页版API实现；并遵循[GPL-3.0 license](https://github.com/hexin-lin-1024/yikeWebClientPython/blob/main/LICENSE)。  
+  
 ### 走过路过，不要错过。只要您是在研究一刻相册网页版的API，[Wiki](https://github.com/hexin-lin-1024/yikeWebClientPython/wiki) 里的东西您就大概率会感兴趣。  
-
-|依赖|  
+  
+### 兼容性  
+|Tested On|
 |---
-|requests  
-|pywin32  
-|Python3|
+|Python 3.7
+|Python 3.8
+|Python 3.9
+|Python 3.10
+  
+### 安装外部依赖  
+`pip3 install requests pywin32`
   
 ### 使用教程：
 引入：`from yike import *`，  
-并实例化`yi = yikeENV(cookies, bdstoken)`。  
+并实例化 `yi = yikeENV(cookies, bdstoken)`。  
 cookie字符串可以在浏览器开发人员工具中寻得，bdstoken同理，设置筛选条件为XHR寻找。  
+未来展望：实现登录。  
   
 ### yikeENV类：  
-yikeENV有几个实现其功能的成员方法：  
-以下方法都不接受参数，且返回一个包含yikePhoto类的列表。  
+yikeENV有以下成员方法：  
+|方法名称|方法作用|方法参数|返回值|
+|---|---|---|---
+|getvideos|获取全部视频|不接受参数|\[\<yikePhoto object\>\]
+|getgifs|获取全部动图|不接受参数|\[\<yikePhoto object\>\]
+|getscreenshots|获取全部截图|不接受参数|\[\<yikePhoto object\>\]
+|listrecent|列出最近可用|不接受参数|\[\<yikePhoto object\>\]
+|getall|获取全部|不接受参数|\[\<yikePhoto object\>\]
+|getrecycled|获取回收站全部|不接受参数|\[\<yikePhoto object\>\]
+|clearrecycle|清空回收站|不接受参数|\[\<yikePhoto object\>\]
 
-|方法名称|方法作用|
-|---|---
-|getvideos()|获取全部视频
-|getgifs()|获取全部动图
-|getscreenshots()|获取全部截图
-|getall()|获取全部
-|getrecycled()|获取回收站全部
-|clearrecycle()|清空回收站|
+特别地，以下三个方法返回包含所有应答JSON(字典)的列表：
+|方法名称|方法作用|方法参数|返回值|
+|---|---|---|---
+|delete|移入回收站|\[\<yikePhoto object\>\]|\[\<class 'dict'\>\]
+|restore|从回收站恢复|\[\<yikePhoto object\>\]|[<<class 'dict'>>]
+|delrecycle|从回收站删除|\[\<yikePhoto object\>\]|[<<class 'dict'>>]
   
-特别地，以下三个方法接受一个参数：  
-该参数为包含了yikePhoto类的列表，且三个方法都返回包含所有应答JSON(字典)的列表。  
-|方法名称|方法作用|
-|---|---
-|delete()|移入回收站
-|restore()|从回收站恢复
-|delrecycle()|从回收站删除|
-  
-特别的，该方法不仅接受一个上述的列表，还接受一个字符串（工作目录，以/结尾）：  
-|方法名称|方法作用|  
-|---|---  
-|dlall() 不推荐使用该方法，因为速度太慢，在之后版本中将改写为多线程下载。 （此方法通过调用yikePhoto.dl()实现）|将给出的媒体全部下载到工作目录中|  
-  
+该方法目前不推荐使用，因为速度过于缓慢：   
+|方法名称|方法作用|方法参数|返回值|
+|---|---|---|---  
+|dlall|将指定的媒体下载到工作目录中|workdir(字符串)|无返回值
   
 ### yikePhoto类：  
-yikePhoto是实现功能的基本单位，含有以下几个成员方法：  
-以下方法都不接受参数，且返回一个JSON(字典)。  
+yikePhoto有以下几个成员方法：   
+|方法名称|方法作用|方法参数|返回值|
+|---|---|---|---
+|delrecycle|从回收站删除自身|不接受参数|应答JSON(字典)
+|restore|从回收站恢复自身|不接受参数|应答JSON(字典)
+|delete|将自身移入回收站|不接受参数|应答JSON(字典)
+|exif|获取自身EXIF|不接受参数|应答JSON(字典)
+|getdl|获取自身下载链接|不接受参数|Url(字符串)
+|dl(会自动信息元信息)|将自身下载到工作目录|workdir(字符串)|没有返回|
   
-|方法名称|方法作用|
-|---|---
-|delrecycle()|从回收站删除自身
-|restore()|从回收站恢复自身
-|delete()|将自身移入回收站
-|exif()|获取自身EXIF|
+yikePhoto有一个属性：  `yikePhoto.time` (字符串)：  记录了其在一刻中显示的时间（在主页时间轴上）且格式为YYYY:MM:DD HH:MM:SS。    
+由于PNG，Webp等图片在传输过程中丢失了创建时间信息，而通常情况此类文件没有被写入元信息，故该属性可作为补充。  
   
-特别的，该方法返回字符串（Url）。  
-  
-|方法名称|方法作用|
-|---|---
-|getdl()|获取自身下载链接|  
-  
-以下方法接受一个字符串（工作目录，要以/结尾）,且没有返回。  
-  
-|方法名称|方法作用|  
-|---|---  
-|dl() （在下载过程中会自动将丢失的创建时间等元信息写入）|将自身下载到工作目录|  
-  
-yikePhoto有一个可能有用的属性：  `yikePhoto.time`。  
-该属性为一个字符串，记录了其在一刻中显示的时间（在主页时间轴上）且格式为YYYY:MM:DD HH:MM:SS。  
-由于Png，Webp等图片在传输过程中丢失了创建时间信息，而通常情况此类文件没有被写入元信息，故该属性可作为补充。  
-
 ### 使用例：
-
+  
 ```Python
 from yike import *  
 bdstoken=input("bdtoken:")  
