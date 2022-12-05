@@ -15,7 +15,7 @@
 |Python 3.10| :white_check_mark: |
 ### Install Dependencies
 `pip3 install requests pywin32`
-### Tutorial:
+### Tutorial
 Import
 ```Python
 from yike import *
@@ -26,8 +26,8 @@ yi = yikeENV(cookies, bdstoken)
 ```
 The cookie string can be sought in the browser developer tools, bdstoken the same, set the filter to XHR to seek.  
 Future outlook: implement login.  
-### yikeENV class:
-yikeENV has the following member methods:
+### `yikeENV` class
+`yikeENV` has the following member methods:
 |Method Name|Function|Args|Return|
 |---|---|---|---|
 |getvideos|Get all videos|No arguments accepted|\[\<yikePhoto object\>\]|
@@ -49,8 +49,8 @@ This method is currently not recommended because it is too slow:
 |Method Name|Function|Args|Return|
 |---|---|---|---|
 |dlall|Downloads the specified media to the working directory|workdir(string)|No return|
-### yikePhoto class.  
-yikePhoto has the following member methods.
+### `yikePhoto` class
+`yikePhoto` has the following member methods.
 |Method Name|Function|Args|Return|
 |---|---|---|---|
 |delrecycle|Deletes itself from the recycle bin|No arguments accepted|Response JSON(dictionary)|
@@ -70,5 +70,5 @@ cookies=input("cookies:")
 yi = yikeENV(cookies, bdstoken)  
 print(yi.delete(yi.getvideos())) #Delete all videos  
 ```
-### Note: 
+### Note
 Task takes a while to execute. Please wait patiently if the interface does not respond. The return 0 means the task was executed successfully.
