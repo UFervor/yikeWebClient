@@ -33,7 +33,7 @@ Future outlook: implement login.
 |getvideos|Get all videos|No arguments accepted|\[\<yikePhoto object\>\]|
 |getgifs|Get all motion pictures|No arguments accepted|\[\<yikePhoto object\>\]|
 |getscreenshots|Get all screenshots|No arguments accepted|\[\<yikePhoto object\>\]|
-|listrecent|List recently available|No arguments accepted|\[\<yikePhoto object\>\]|
+|listrecent|List recent medias|No arguments accepted|\[\<yikePhoto object\>\]|
 |getall|Get all medias|No arguments accepted|\[\<yikePhoto object\>\]|
 |getrecycled|Get all recycled media|No arguments accepted|\[\<yikePhoto object\>\]|
 |clearrecycle|Clear the recycle bin|No arguments accepted|\[\<yikePhoto object\>\]|
@@ -42,8 +42,8 @@ In particular, the following three methods return a list containing all the resp
 |Method Name|Function|Args|Return|
 |---|---|---|---|
 |delete|Move to recycle bin|\[\<yikePhoto object\>\]|\[\<class 'dict'\>\]|
-|restore|restore from recycle bin|\[\<yikePhoto object\>\]|\[\<class 'dict'\>\]|
-|delrecycle|delete from recycle bin|\[\<yikePhoto object\>\]|\[\<class 'dict'\>\]||
+|restore|Restore from recycle bin|\[\<yikePhoto object\>\]|\[\<class 'dict'\>\]|
+|delrecycle|Delete from recycle bin|\[\<yikePhoto object\>\]|\[\<class 'dict'\>\]||
 
 This method is currently not recommended because it is too slow:
 |Method Name|Function|Args|Return|
