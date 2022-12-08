@@ -60,14 +60,14 @@ yikeENV有以下成员方法：
 yikePhoto有以下几个成员方法：   
 |方法名称|方法作用|方法参数|返回值|
 |---|---|---|---
-|delrecycle|从回收站删除自身|不接受参数|应答JSON(字典)
-|restore|从回收站恢复自身|不接受参数|应答JSON(字典)
-|delete|将自身移入回收站|不接受参数|应答JSON(字典)
-|exif|获取自身EXIF|不接受参数|应答JSON(字典)
-|getdl|获取自身下载链接|不接受参数|Url(字符串)
-|dl(会自动信息元信息)|将自身下载到工作目录|workdir(字符串)|没有返回|
+|delrecycle|从回收站删除|不接受参数|应答JSON(字典)
+|restore|从回收站恢复|不接受参数|应答JSON(字典)
+|delete|移入回收站|不接受参数|应答JSON(字典)
+|exif|获取EXIF|不接受参数|应答JSON(字典)
+|getdl|获取下载链接|不接受参数|Url(字符串)
+|dl(会自动写入元信息)|下载到工作目录|workdir(字符串)|没有返回|
   
-yikePhoto有一个属性：  `yikePhoto.time` (字符串)：  是其在一刻主页时间轴上显示的时间，格式为YYYY:MM:DD HH:MM:SS。    
+yikePhoto有一个属性：  `yikePhoto.time` (字符串)：  是其在一刻主页时间轴上显示的时间，格式为 `YYYY:MM:DD HH:MM:SS`。    
 由于PNG，Webp等图片在传输过程中丢失了创建时间信息，而通常情况此类文件没有被写入元信息，故该属性可作为补充。  
   
 ### 使用例：
