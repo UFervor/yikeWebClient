@@ -2,17 +2,6 @@
 
 ### This is an open-source Baidu Yike Gallery client for learning purposes only, implemented by reversing the web version API. It follows the [GPL-3.0 license](https://github.com/hexin-lin-1024/yikeWebClientPython/blob/main/LICENSE).
 ### You would be interested in stuff in [Wiki](https://github.com/hexin-lin-1024/yikeWebClientPython/wiki).
-### Compatibility
-|Version|Compatible|
-|---|---|
-|Python 2.x| :x: |
-|Python 3.4| :white_check_mark: |
-|Python 3.5| :white_check_mark: |
-|Python 3.6| :white_check_mark: |
-|Python 3.7| :white_check_mark: |
-|Python 3.8| :white_check_mark: |
-|Python 3.9| :white_check_mark: |
-|Python 3.10| :white_check_mark: |
 ### Install Dependencies
 `pip3 install requests pywin32`
 ### Tutorial
