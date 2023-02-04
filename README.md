@@ -1,4 +1,4 @@
-[English](https://github.com/hexin-lin-1024/yikeWebClient/blob/main/README.md) | [简体中文](https://github.com/hexin-lin-1024/yikeWebClient/blob/main/README.sc.md)
+🌐 [English](https://github.com/hexin-lin-1024/yikeWebClient/blob/main/README.md) | [简体中文](https://github.com/hexin-lin-1024/yikeWebClient/blob/main/README.sc.md)
 
 ### This is an open-source Baidu Yike Gallery client for learning purposes only, implemented by reversing the web version API. It follows the [GPL-3.0 license](https://github.com/hexin-lin-1024/yikeWebClientPython/blob/main/LICENSE).
 ### You would be interested in stuff in [Wiki](https://github.com/hexin-lin-1024/yikeWebClientPython/wiki).
