@@ -4,18 +4,6 @@
   
 ### 走过路过，不要错过。只要您是在研究一刻相册网页版的API，[Wiki](https://github.com/hexin-lin-1024/yikeWebClientPython/wiki) 里的东西您就大概率会感兴趣。  
   
-### 兼容性  
-|版本|通过|
-|---|---
-|Python 2.x| :x: |
-|Python 3.4| :white_check_mark: |
-|Python 3.5| :white_check_mark: |
-|Python 3.6| :white_check_mark: |
-|Python 3.7| :white_check_mark: |
-|Python 3.8| :white_check_mark: |
-|Python 3.9| :white_check_mark: |
-|Python 3.10| :white_check_mark: |
-  
 ### 安装外部依赖  
 `pip3 install requests pywin32`
   
