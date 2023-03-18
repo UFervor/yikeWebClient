@@ -11,11 +11,12 @@ from email.message import Message
 import time
 
 req = requests.Session()
+
+
 class yikeENV():
-    def __init__(self, cookies, bdstoken, limit=100):
+    def __init__(self, cookies, bdstoken):
         self.cookies = dict([l.split("=", 1) for l in cookies.split("; ")])
         self.bdstoken = str(bdstoken)
-        self.limit = limit
         self.ua = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"}
         self.s = {
@@ -24,10 +25,10 @@ class yikeENV():
             'screenshots': '22'
         }
 
-    def __cursor__(self, start, limit):
+    def __cursor__(self, start):
         if start == 0:
             return ''
-        return '&cursor=' + str(base64.b64encode(('{\"start\":'+str(start)+',\"limit\":'+str(limit)+'}').encode('utf-8')))[2:-1]
+        return '&cursor=' + str(base64.b64encode(('{\"start\":'+str(start)+',\"limit\":'+str(start + 99)+'}').encode('utf-8')))[2:-1]
 
     def __search__(self, method):
         url = 'https://photo.baidu.com/youai/iclass/index/v1/search?' \
@@ -38,18 +39,18 @@ class yikeENV():
         l = []
         i = 0
         while True:
-            tmp = req.get(url + self.__cursor__(i, self.limit),
-                               cookies=self.cookies, headers=self.ua).json()['list']
+            tmp = req.get(url + self.__cursor__(i),
+                          cookies=self.cookies, headers=self.ua).json()['list']
             if tmp == []:
                 break
             l += tmp
-            i += self.limit
+            i += 100
         result = []
         for i in l:
             result.append(yikePhoto(i, self.cookies, self.bdstoken))
         return result
 
-    def __list__(self, method, extra = ""):
+    def __list__(self, method, extra=""):
         url = 'https://photo.baidu.com/youai/file/v1/' + method + '?' \
             + 'clienttype=70' \
             + '&bdstoken=' + self.bdstoken \
@@ -57,15 +58,15 @@ class yikeENV():
         l = []
         i = 0
         while True:
-            result = req.get(url + self.__cursor__(i, self.limit),
-                            cookies=self.cookies, headers=self.ua).json()
+            result = req.get(url + self.__cursor__(i),
+                             cookies=self.cookies, headers=self.ua).json()
             if 'list' not in result:
                 break
             tmp = result['list']
             if tmp == []:
                 break
             l += tmp
-            i += self.limit
+            i += 100
         result = []
         for i in l:
             result.append(yikePhoto(i, self.cookies, self.bdstoken))
@@ -84,7 +85,7 @@ class yikeENV():
                 fsid_list = fsid_list[500::]
                 while (True):
                     r = req.get(
-                    url + str(tmp).replace(' ', '').replace('\'', ''), cookies=self.cookies, headers=self.ua).json()
+                        url + str(tmp).replace(' ', '').replace('\'', ''), cookies=self.cookies, headers=self.ua).json()
                     if r['errno'] == 0:
                         break
                     else:
@@ -94,7 +95,7 @@ class yikeENV():
                 tmp = fsid_list
                 while (True):
                     r = req.get(
-                    url + str(tmp).replace(' ', '').replace('\'', ''), cookies=self.cookies, headers=self.ua).json()
+                        url + str(tmp).replace(' ', '').replace('\'', ''), cookies=self.cookies, headers=self.ua).json()
                     if r['errno'] == 0:
                         break
                     else:
@@ -134,7 +135,7 @@ class yikeENV():
             + 'clienttype=70' \
             + '&bdstoken=' + self.bdstoken
         return req.get(url, cookies=self.cookies, headers=self.ua).json()
-    
+
     def dlall(self, li, workdir):
         for i in li:
             i.dl(workdir)
@@ -143,7 +144,7 @@ class yikeENV():
 class yikePhoto:
     def __init__(self, js, cookies, bdstoken):
         self.fsid = str(js['fsid'])
-        self.time = js['extra_info']['date_time'].replace('-',':')
+        self.time = js['extra_info']['date_time'].replace('-', ':')
         self.cookies = cookies
         self.bdstoken = str(bdstoken)
         self.ua = {
@@ -158,8 +159,10 @@ class yikePhoto:
 
     def __modifyFileTime__(self, filePath, cTime):
         format = "%Y:%m:%d %H:%M:%S"
-        Time_t = time.localtime(time.mktime(time.strptime(cTime, '%Y:%m:%d %H:%M:%S')))
-        fh = CreateFile(filePath, GENERIC_READ | GENERIC_WRITE, 0, None, OPEN_EXISTING, 0, 0)
+        Time_t = time.localtime(time.mktime(
+            time.strptime(cTime, '%Y:%m:%d %H:%M:%S')))
+        fh = CreateFile(filePath, GENERIC_READ | GENERIC_WRITE,
+                        0, None, OPEN_EXISTING, 0, 0)
         createTimes, accessTimes, modifyTimes = GetFileTime(fh)
         T = Time(time.mktime(Time_t))
         SetFileTime(fh, T, T, T)
@@ -200,7 +203,8 @@ class yikePhoto:
             if 'Content-Disposition' in r.headers and r.headers['Content-Disposition']:
                 m = Message()
                 m['Content-Disposition'] = r.headers['Content-Disposition']
-                file_name = m.get_param('filename', None, 'Content-Disposition')
+                file_name = m.get_param(
+                    'filename', None, 'Content-Disposition')
                 if file_name:
                     f = file_name.encode('ISO-8859-1').decode('utf8')
                     filename = unquote(f)
