@@ -1,5 +1,7 @@
 🌐 [English](https://github.com/hexin-lin-1024/yikeWebClient/blob/main/README.md) | [简体中文](https://github.com/hexin-lin-1024/yikeWebClient/blob/main/README.sc.md)
 
+`AList`已经添加了`Baidu.Photo`驱动，标志着成熟的一刻相册支持。此仓库将被存档。
+
 ## 这是一个开源的百度一刻相册客户端，仅供学习使用，通过逆向网页版API实现；并遵循[GPL-3.0 license](https://github.com/hexin-lin-1024/yikeWebClientPython/blob/main/LICENSE)。  
   
 ### 走过路过，不要错过。只要您是在研究一刻相册网页版的API，[Wiki](https://github.com/hexin-lin-1024/yikeWebClientPython/wiki) 里的东西您就大概率会感兴趣。  

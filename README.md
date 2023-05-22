@@ -1,5 +1,7 @@
 🌐 [English](https://github.com/hexin-lin-1024/yikeWebClient/blob/main/README.md) | [简体中文](https://github.com/hexin-lin-1024/yikeWebClient/blob/main/README.sc.md)
 
+AList has added the Baidu.Photo driver, marking a mature support. This repository will be archived.
+
 ### This is an open-source Baidu Yike Gallery client for learning purposes only, implemented by reversing the web version API. It follows the [GPL-3.0 license](https://github.com/hexin-lin-1024/yikeWebClientPython/blob/main/LICENSE).
 ### You would be interested in stuff in [Wiki](https://github.com/hexin-lin-1024/yikeWebClientPython/wiki).
 ### Install Dependencies
